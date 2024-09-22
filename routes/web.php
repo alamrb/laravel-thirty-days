@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Arr;
 
+use App\Models\Job;
+
+
+
 Route::get('/', function () {
     return view('home');
 });
@@ -10,53 +14,20 @@ Route::get('/', function () {
 
 Route::get('/jobs', function () {
     return view('jobs', [
-        'jobs' =>
-        [
-            [
-                'id' => 1,
-                'title' => 'Director',
-                'salary' => '$50000'
-            ],
-            [
-                'id' => 2,
-                'title' => 'Programmer',
-                'salary' => '$40000'
-            ],
-            [
-                'id' => 3,
-                'title' => 'Teacher',
-                'salary' => '$30000'
-            ]
+        'jobs' => Job::all()
 
-        ]
     ]);
 });
 
 Route::get('/jobs/{id}', function ($id) {
-    $jobs =
-        [
-            [
-                'id' => 1,
-                'title' => 'Director',
-                'salary' => '$50000'
-            ],
-            [
-                'id' => 2,
-                'title' => 'Programmer',
-                'salary' => '$40000'
-            ],
-            [
-                'id' => 3,
-                'title' => 'Teacher',
-                'salary' => '$30000'
-            ]
-
-        ];
-
     // \Illuminate\Support\Arr::first($jobs, function ($job) use ($id) {
     //     return $job['id'] == $id;
     // });
-    $job = Arr::first($jobs, fn($job) => $job['id'] == $id);
+    // $job = Arr::first(Job::all(), fn($job) => $job['id'] == $id);
+    $job = Job::find($id);
+    if (!$job) {
+        abort(404);
+    }
     return view('job', ['job' => $job]);
 });
 
